@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <script src="https://unpkg.com/d3@4.10.0"></script>
+    <script src="https://unpkg.com/d3-area-label@1.0.0"></script>
+    <title>Area Label Test</title>
+    <style>
+      .area-label {
+        font-family: sans-serif;
+        fill-opacity: 0.7;
+        fill: white;
+      }
+      path {
+        fill-opacity: 0.6;
+      }
+    </style>
+  </head>
+  <body>
+    <svg width="1900" height="250"></svg>
+    <script>
+      const generateData = keys => {
+        const n = 28
+        const prev = {}
+        const velocity = {}
+
+        /*const data = d3.range(n).map((d, i) => {
+          const row = { time: i }
+          keys.forEach(key => {
+            velocity[key] = ((velocity[key] || 0) + (Math.random() - .5)) * 0.9
+            const value = Math.max(0.2, (prev[key] || Math.random() * 10) + velocity[key])
+            prev[key] = row[key] = value
+          })
+          return row
+        })*/
+        const data =
+[
+  {
+    "time": 0,
+    "Bed": 10,
+    "Social": 6,
+    "University": 8,
+    "Teaching": 0,
+    "Ubisoft": 0,
+    "Ekkla Research": 0,
+    "France Citévision": 0,
+    "Amilto": 0,
+    "CHU Amiens": 0
+  },
+  {
+    "time": 1,
+    "Bed": 10,
+    "Social": 6,
+    "University": 8,
+    "Teaching": 0,
+    "Ubisoft": 0,
+    "Ekkla Research": 0,
+    "France Citévision": 0,
+    "Amilto": 0,
+    "CHU Amiens": 0
+  },
+  {
+    "time": 2,
+    "Bed": 10,
+    "Social": 6,
+    "University": 8,
+    "Teaching": 0,
+    "Ubisoft": 0,
+    "Ekkla Research": 0,
+    "France Citévision": 0,
+    "Amilto": 0,
+    "CHU Amiens": 0
+  },
+  {
+    "time": 3,
+    "Bed": 10,
+    "Social": 6,
+    "University": 8,
+    "Teaching": 0,
+    "Ubisoft": 0,
+    "Ekkla Research": 0,
+    "France Citévision": 0,
+    "Amilto": 0,
+    "CHU Amiens": 0
+  },
+  {
+    "time": 4,
+    "Bed": 8,
+    "Social": 7,
+    "University": 9,
+    "Teaching": 0,
+    "Ubisoft": 0,
+    "Ekkla Research": 0,
+    "France Citévision": 0,
+    "Amilto": 0,
+    "CHU Amiens": 0
+  },
+  {
+    "time": 5,
+    "Bed": 7,
+    "Social": 5,
+    "University": 12,
+    "Teaching": 0,
+    "Ubisoft": 0,
+    "Ekkla Research": 0,
+    "France Citévision": 0,
+    "Amilto": 0,
+    "CHU Amiens": 0
+  },
+  {
+    "time": 6,
+    "Bed": 7,
+    "Social": 5,
+    "University": 12,
+    "Teaching": 0,
+    "Ubisoft": 0,
+    "Ekkla Research": 0,
+    "France Citévision": 0,
+    "Amilto": 0,
+    "CHU Amiens": 0
+  },
+  {
+    "time": 7,
+    "Bed": 7,
+    "Social": 4,
+    "University": 12,
+    "Teaching": 1,
+    "Ubisoft": 0,
+    "Ekkla Research": 0,
+    "France Citévision": 0,
+    "Amilto": 0,
+    "CHU Amiens": 0
+  },
+  {
+    "time": 8,
+    "Bed": 7,
+    "Social": 3,
+    "University": 12,
+    "Teaching": 1,
+    "Ubisoft": 1,
+    "Ekkla Research": 0,
+    "France Citévision": 0,
+    "Amilto": 0,
+    "CHU Amiens": 0
+  },
+  {
+    "time": 9,
+    "Bed": 7,
+    "Social": 5,
+    "University": 0,
+    "Teaching": 0,
+    "Ubisoft": 12,
+    "Ekkla Research": 0,
+    "France Citévision": 0,
+    "Amilto": 0,
+    "CHU Amiens": 0
+  },
+  {
+    "time": 10,
+    "Bed": 6,
+    "Social": 2,
+    "University": 0,
+    "Teaching": 0,
+    "Ubisoft": 16,
+    "Ekkla Research": 0,
+    "France Citévision": 0,
+    "Amilto": 0,
+    "CHU Amiens": 0
+  },
+  {
+    "time": 11,
+    "Bed": 7,
+    "Social": 4,
+    "University": 0,
+    "Teaching": 0,
+    "Ubisoft": 3,
+    "Ekkla Research": 10,
+    "France Citévision": 0,
+    "Amilto": 0,
+    "CHU Amiens": 0
+  },
+  {
+    "time": 12,
+    "Bed": 7,
+    "Social": 2,
+    "University": 0,
+    "Teaching": 0,
+    "Ubisoft": 0,
+    "Ekkla Research": 14,
+    "France Citévision": 1,
+    "Amilto": 0,
+    "CHU Amiens": 0
+  },
+  {
+    "time": 13,
+    "Bed": 7,
+    "Social": 4,
+    "University": 0,
+    "Teaching": 0,
+    "Ubisoft": 0,
+    "Ekkla Research": 0,
+    "France Citévision": 13,
+    "Amilto": 0,
+    "CHU Amiens": 0
+  },
+  {
+    "time": 14,
+    "Bed": 7,
+    "Social": 4,
+    "University": 0,
+    "Teaching": 0,
+    "Ubisoft": 0,
+    "Ekkla Research": 0,
+    "France Citévision": 13,
+    "Amilto": 0,
+    "CHU Amiens": 0
+  },
+  {
+    "time": 15,
+    "Bed": 7,
+    "Social": 4,
+    "University": 0,
+    "Teaching": 1,
+    "Ubisoft": 0,
+    "Ekkla Research": 0,
+    "France Citévision": 12,
+    "Amilto": 0,
+    "CHU Amiens": 0
+  },
+  {
+    "time": 16,
+    "Bed": 7,
+    "Social": 4,
+    "University": 0,
+    "Teaching": 1,
+    "Ubisoft": 0,
+    "Ekkla Research": 0,
+    "France Citévision": 12,
+    "Amilto": 0,
+    "CHU Amiens": 0
+  },
+  {
+    "time": 17,
+    "Bed": 7,
+    "Social": 4,
+    "University": 0,
+    "Teaching": 1,
+    "Ubisoft": 0,
+    "Ekkla Research": 0,
+    "France Citévision": 11,
+    "Amilto": 1,
+    "CHU Amiens": 0
+  },
+  {
+    "time": 18,
+    "Bed": 7,
+    "Social": 4,
+    "University": 0,
+    "Teaching": 1,
+    "Ubisoft": 0,
+    "Ekkla Research": 0,
+    "France Citévision": 11,
+    "Amilto": 1,
+    "CHU Amiens": 0
+  },
+  {
+    "time": 19,
+    "Bed": 7,
+    "Social": 4,
+    "University": 0,
+    "Teaching": 1,
+    "Ubisoft": 0,
+    "Ekkla Research": 0,
+    "France Citévision": 11,
+    "Amilto": 1,
+    "CHU Amiens": 0
+  },
+  {
+    "time": 20,
+    "Bed": 7,
+    "Social": 4,
+    "University": 0,
+    "Teaching": 1,
+    "Ubisoft": 0,
+    "Ekkla Research": 0,
+    "France Citévision": 11,
+    "Amilto": 1,
+    "CHU Amiens": 0
+  },
+  {
+    "time": 21,
+    "Bed": 7,
+    "Social": 4,
+    "University": 0,
+    "Teaching": 1,
+    "Ubisoft": 0,
+    "Ekkla Research": 0,
+    "France Citévision": 11,
+    "Amilto": 1,
+    "CHU Amiens": 0
+  },
+  {
+    "time": 22,
+    "Bed": 7,
+    "Social": 4,
+    "University": 0,
+    "Teaching": 1,
+    "Ubisoft": 0,
+    "Ekkla Research": 0,
+    "France Citévision": 11,
+    "Amilto": 1,
+    "CHU Amiens": 0
+  },
+  {
+    "time": 23,
+    "Bed": 7,
+    "Social": 4,
+    "University": 0,
+    "Teaching": 1,
+    "Ubisoft": 0,
+    "Ekkla Research": 0,
+    "France Citévision": 11,
+    "Amilto": 1,
+    "CHU Amiens": 0
+  },
+  {
+    "time": 24,
+    "Bed": 7,
+    "Social": 4,
+    "University": 0,
+    "Teaching": 1,
+    "Ubisoft": 0,
+    "Ekkla Research": 0,
+    "France Citévision": 9,
+    "Amilto": 3,
+    "CHU Amiens": 0
+  },
+  {
+    "time": 25,
+    "Bed": 7,
+    "Social": 4,
+    "University": 0,
+    "Teaching": 1,
+    "Ubisoft": 0,
+    "Ekkla Research": 0,
+    "France Citévision": 0,
+    "Amilto": 12,
+    "CHU Amiens": 0
+  },
+  {
+    "time": 26,
+    "Bed": 7,
+    "Social": 4,
+    "University": 0,
+    "Teaching": 1,
+    "Ubisoft": 0,
+    "Ekkla Research": 0,
+    "France Citévision": 0,
+    "Amilto": 12,
+    "CHU Amiens": 0
+  },
+  {
+    "time": 27,
+    "Bed": 7,
+    "Social": 4,
+    "University": 0,
+    "Teaching": 1,
+    "Ubisoft": 0,
+    "Ekkla Research": 0,
+    "France Citévision": 0,
+    "Amilto": 3,
+    "CHU Amiens": 9
+  },
+  {
+    "time": 28,
+    "Bed": 7,
+    "Social": 4,
+    "University": 0,
+    "Teaching": 1,
+    "Ubisoft": 0,
+    "Ekkla Research": 0,
+    "France Citévision": 0,
+    "Amilto": 0,
+    "CHU Amiens": 12
+  }
+];
+        data.keys = keys
+        console.log(data);
+        return data
+      }
+
+      const svg = d3.select('svg')
+      const width = +svg.attr('width')
+      const height = +svg.attr('height')
+
+      const stack = d3.stack().offset(d3.stackOffsetExpand)
+      const xValue = d => d.time
+      const xScale = d3.scaleLinear()
+      const yScale = d3.scaleLinear()
+      const colorScale = d3.scaleOrdinal().range(d3.schemeCategory10)
+
+      const area = d3.area()
+        .x(d => xScale(xValue(d.data)))
+        .y0(d => yScale(d[0]))
+        .y1(d => yScale(d[1]))
+        .curve(d3.curveBasis)
+
+      const render = (data) => {
+        stack.keys(data.keys)
+        colorScale.domain(data.keys)
+        const stacked = stack(data)
+
+        xScale
+          .domain(d3.extent(data, d => xValue(d)))
+          .range([0, width])
+
+        yScale
+          .domain([
+            d3.min(stacked[0], d => d[0]),
+            d3.max(stacked[stacked.length - 1], d => d[1])
+          ])
+          .range([height, 0])
+
+        const transition = d3.transition().duration(1000)
+
+        const paths = svg.selectAll('path').data(stacked)
+        paths
+          .enter().append('path')
+          .merge(paths)
+            .attr('fill', d => colorScale(d.key))
+            .attr('stroke', d => colorScale(d.key))
+          .transition(transition)
+            .attr('d', area)
+
+        const labels = svg.selectAll('.area-label').data(stacked)
+        labels
+          .enter().append('text')
+            .attr('class', 'area-label')
+          .merge(labels)
+            .text(d => d.key)
+          .transition(transition)
+            .attr('transform', d3.areaLabel(area))
+      }
+
+      const renderGeneratedData = () => {
+        render(generateData([
+        "Bed",
+        "Social",
+        "University",
+        "Teaching",
+        "Ubisoft",
+        "Ekkla Research",
+        "France Citévision",
+        "Amilto",
+        "CHU Amiens"
+        ]))
+      }
+
+      renderGeneratedData()
+      setInterval(renderGeneratedData, 2000)
+
+    </script>
+  </body>
+</html>
