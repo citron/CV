@@ -509,9 +509,8 @@
             .merge(labels)
               .text(d => d.key)
             .transition(transition)
-              .attr('transform', d3.areaLabel(area)
+              .attr('transform', d3.areaLabel(area))
         }
-        )
       }
 
       const renderGeneratedData = () => {
