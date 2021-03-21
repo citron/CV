@@ -500,15 +500,18 @@
             .attr('stroke', d => colorScale(d.key))
           .transition(transition)
             .attr('d', area)
-
-        const labels = svg.selectAll('.area-label').data(stacked)
-        labels
-          .enter().append('text')
-            .attr('class', 'area-label')
-          .merge(labels)
-            .text(d => d.key)
-          .transition(transition)
-            .attr('transform', d3.areaLabel(area))
+        
+        if (displayLabels==true) {
+          const labels = svg.selectAll('.area-label').data(stacked)
+          labels
+            .enter().append('text')
+              .attr('class', 'area-label')
+            .merge(labels)
+              .text(d => d.key)
+            .transition(transition)
+              .attr('transform', d3.areaLabel(area)
+        }
+        )
       }
 
       const renderGeneratedData = () => {
